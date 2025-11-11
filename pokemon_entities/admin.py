@@ -7,6 +7,7 @@ from pokemon_entities.models import Pokemon, PokemonEntity
 class PokemonAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(PokemonEntity)
 class PokemonEntityAdmin(admin.ModelAdmin):
     pass
