@@ -1,10 +1,12 @@
 import folium
 import json
 
+from django.db.models import Prefetch, Q
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
+from django.utils.timezone import localtime
 
-from pokemon_entities.models import Pokemon
+from pokemon_entities.models import Pokemon, PokemonEntity
 
 MOSCOW_CENTER = [55.751244, 37.618423]
 DEFAULT_IMAGE_URL = (
@@ -28,7 +30,13 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 
 def show_all_pokemons(request):
-    pokemons = Pokemon.objects.prefetch_related("pokemonentity_set")
+    local_time = localtime()
+    pokemons = Pokemon.objects.prefetch_related(
+        Prefetch(
+            "pokemonentity_set",
+            PokemonEntity.objects.exclude(Q(appeares_at__gt=local_time) | Q(disappeares_at__lte=local_time)),
+        )
+    )
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon in pokemons:
