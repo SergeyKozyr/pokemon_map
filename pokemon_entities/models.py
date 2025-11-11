@@ -1,4 +1,5 @@
 from django.db import models
+from django.http import HttpRequest
 
 
 class Pokemon(models.Model):
@@ -7,6 +8,9 @@ class Pokemon(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    def image_url(self, request: HttpRequest) -> str | None:
+        return request.build_absolute_uri(self.image.url) if self.image else None
 
 
 class PokemonEntity(models.Model):
