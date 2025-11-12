@@ -1,5 +1,13 @@
 from django.db import models
+from django.db.models import Manager, QuerySet, Q
 from django.http import HttpRequest
+from django.utils.timezone import localtime
+
+
+class PokemonEntityManager(Manager):
+    def active(self) -> QuerySet:
+        local_time = localtime()
+        return self.exclude(Q(appeares_at__gt=local_time) | Q(disappeares_at__lte=local_time))
 
 
 class Pokemon(models.Model):
@@ -14,7 +22,9 @@ class Pokemon(models.Model):
 
 
 class PokemonEntity(models.Model):
-    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
+    objects = PokemonEntityManager()
+
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, related_name="entities")
     lat = models.FloatField()
     lon = models.FloatField()
     appeares_at = models.DateTimeField()
