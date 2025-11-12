@@ -70,6 +70,13 @@ def show_pokemon(request, pokemon_id):
             "img_url": pokemon.previous_evolution.image_url(request),
         }
 
+    if next_evolution := pokemon.next_evolutions.first():
+        pokemon_context["next_evolution"] = {
+            "pokemon_id": next_evolution.id,
+            "title_ru": next_evolution.title,
+            "img_url": next_evolution.image_url(request),
+        }
+
     return render(
         request,
         "pokemon.html",
