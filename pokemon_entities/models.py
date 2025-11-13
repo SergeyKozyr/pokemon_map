@@ -37,9 +37,12 @@ class Pokemon(models.Model):
 
 
 class PokemonEntity(models.Model):
-    objects = PokemonEntityManager()
-
-    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, related_name="entities", verbose_name="Покемон")
+    pokemon = models.ForeignKey(
+        Pokemon,
+        on_delete=models.CASCADE,
+        related_name="entities",
+        verbose_name="Покемон",
+    )
     lat = models.FloatField("Широта")
     lon = models.FloatField("Долгота")
     appeares_at = models.DateTimeField("Появляется в")
@@ -49,6 +52,8 @@ class PokemonEntity(models.Model):
     damage = models.IntegerField("Атака", default=1)
     defence = models.IntegerField("Защита", default=1)
     stamina = models.IntegerField("Выносливость", default=1)
+
+    objects = PokemonEntityManager()
 
     class Meta:
         verbose_name = "Покемон на карте"
